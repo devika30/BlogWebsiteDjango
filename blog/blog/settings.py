@@ -132,3 +132,4 @@ REST_FRAMEWORK = {
 }
 
 django_heroku.settings(locals())
+heroku config:set DISABLE_COLLECTSTATIC=1
