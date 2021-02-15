@@ -12,81 +12,92 @@ from .serializers import UserSerializer, RegisterSerializer
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
+from rest_framework import status
+from rest_framework.views import APIView 
 
-@csrf_exempt
-def category_list(request):
-    if request.method == 'GET':
-        category = Category.objects.all()
-        serializer = CategorySerializer(category, many=True)
-        return JsonResponse(serializer.data, safe=False)
- 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = CategorySerializer(data=data)
+class CategoryAPIView(APIView):
+    def get(self,request):
+            category = Category.objects.all()
+            serializer = CategorySerializer(category, many=True)
+            return JsonResponse(serializer.data, safe=False)
+    
+    def post(self,request):
+        serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def category_detail(request, pk):
-    try:
-        category = Category.objects.get(pk=pk)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class CategoryDetails(APIView):
+    def get_object(request, pk):
+        try:
+            return Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
  
-    if request.method == 'GET':
+    def get(self,request,pk):
+        category=self.get_object(pk)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
- 
-    elif request.method == 'PUT':
+    
+    def put(self,request,pk):
+        category=self.get_object(pk)
         serializer = CategorySerializer(category, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
-    elif request.method == 'DELETE':
+    
+    def delete(self,request,pk):
+        category=self.get_object(pk)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+        
 
-@csrf_exempt
-def blog_list(request):
-    if request.method == 'GET':
+class BlogList(APIView):
+    def get(self,request):
         blog = Blog.objects.all()
         serializer = BlogSerializer(blog, many=True)
         return JsonResponse(serializer.data, safe=False)
- 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = BlogSerializer(data=data)
+    
+    def post(self,request):
+        serializer = BlogSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def blog_detail(request, pk):
-    try:
-        blog = Blog.objects.get(pk=pk)
-    except Blog.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
- 
-    if request.method == 'GET':
+
+class BlogDetail(APIView):
+    def get_object(request,pk):
+        try:
+            return Blog.objects.get(pk=pk)
+        except Blog.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self,request,pk):
+        blog=self.get_object(pk)
         serializer = BlogSerializer(blog)
         return Response(serializer.data)
- 
-    elif request.method == 'PUT':
+    
+    def put(self,request,pk):
+        blog=self.get_object(pk)
         serializer = BlogSerializer(blog, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
-    elif request.method == 'DELETE':
+
+    def delete(self,request,pk):
+        blog=self.get_object(pk)
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
