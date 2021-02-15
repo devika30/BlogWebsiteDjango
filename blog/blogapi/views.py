@@ -3,7 +3,6 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import *
 from .serializers import *
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics, permissions
@@ -57,10 +56,16 @@ class CategoryDetails(APIView):
 
 class BlogList(APIView):
     def get(self,request):
+        q = request.GET.get("q",None)
+        print(q)
+        if q:
+            blog = Blog.objects.filter(category__name__icontains=q)
+            serializer = BlogSerializer(blog, many=True)
+            return JsonResponse(serializer.data, safe=False)
         blog = Blog.objects.all()
         serializer = BlogSerializer(blog, many=True)
         return JsonResponse(serializer.data, safe=False)
-    
+
     def post(self,request):
         serializer = BlogSerializer(data=request.data)
         if serializer.is_valid():
@@ -95,10 +100,6 @@ class BlogDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
-
-
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -120,3 +121,12 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+def get_by_category(category_name):
+    blog = Blog.objects.all()
+    serializer = BlogSerializer(blog, many=True)
+    if category_id:
+        return Blog.objects.filter(category=category_name)
+    else:
+        Blog.objects.all()
+
