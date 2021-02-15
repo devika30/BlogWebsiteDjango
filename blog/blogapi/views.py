@@ -57,7 +57,6 @@ class CategoryDetails(APIView):
 class BlogList(APIView):
     def get(self,request):
         q = request.GET.get("q",None)
-        print(q)
         if q:
             blog = Blog.objects.filter(category__name__icontains=q)
             serializer = BlogSerializer(blog, many=True)
@@ -121,12 +120,4 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
-
-def get_by_category(category_name):
-    blog = Blog.objects.all()
-    serializer = BlogSerializer(blog, many=True)
-    if category_id:
-        return Blog.objects.filter(category=category_name)
-    else:
-        Blog.objects.all()
 
