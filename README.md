@@ -17,14 +17,14 @@
 ##### CRUD API Category Table
 #### [Get all categories](http://127.0.0.1:8000/category/)
 #### [Create update delete](http://127.0.0.1:8000/category_detail/<int:pk>)
-[example](http://127.0.0.1:8000/category_detail/3)
+[example](http://127.0.0.1:8000/category_detail/3)/
 ![categoryget](https://user-images.githubusercontent.com/37765578/107978208-64d67380-6fe2-11eb-8bab-86858dc6b47a.PNG)
 ![categorygetbyobject](https://user-images.githubusercontent.com/37765578/107978209-64d67380-6fe2-11eb-88a6-b06b4ce1c6b5.PNG)
 
 ##### CRUD API for Blog Table
 #### [Get all blogs](http://127.0.0.1:8000/blog/)
 #### [Create update delete](http://127.0.0.1:8000/blog_detail/<int:pk>)
-[example](http://127.0.0.1:8000/blog_detail/5)
+[example](http://127.0.0.1:8000/blog_detail/5)/
 ![blogall](https://user-images.githubusercontent.com/37765578/107978205-63a54680-6fe2-11eb-9943-0f589290e6f4.PNG)
 ![blogdetail](https://user-images.githubusercontent.com/37765578/107978206-643ddd00-6fe2-11eb-951e-47a8ac3fe1e1.PNG)
 
